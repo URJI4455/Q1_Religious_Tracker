@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2019 E.C. — Q1 Religious Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="app-header">
+        <h1>Q1 Religious Tracker</h1>
+        <button id="openSopBtn" class="btn-outline" aria-label="Open SOP Guide">SOP Guide</button>
+    </header>
+
+    <main class="app-container">
+        <!-- LIVE DASHBOARD -->
+        <section class="dashboard-section" aria-label="Live Q1 Dashboard">
+            <h2 class="sr-only">Live Dashboard</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Qur'an</h3>
+                    <span id="quranTrajectory" class="trajectory-badge">⏳ Pending</span>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-main">
+                        <span id="quranTotalPages">0</span>
+                        <span class="stat-label">pages</span>
+                    </div>
+                    <div class="stat-secondary">
+                        <span id="quranCurrentJuz">0.0</span> Juz
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small>Q1 Reference: 45 Juz (≈ 10 pages/day)</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Zikr</h3>
+                    <span id="zikrTrajectory" class="trajectory-badge">⏳ Pending</span>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-main">
+                        <span id="zikrTotal">0</span>
+                        <span class="stat-label">total</span>
+                    </div>
+                    <div class="stat-secondary">
+                        <span id="zikrAverage">0.0</span> / day avg
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small>Daily Baseline: 55 counts</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Sawm</h3>
+                    <span class="trajectory-badge">Annual Goal: 12</span>
+                </div>
+                <div class="card-stats">
+                    <div class="stat-main">
+                        <span id="sawmTotal">0</span>
+                        <span class="stat-label">/ 12</span>
+                    </div>
+                    <div class="stat-secondary">
+                        Completed Fasts
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small>Unique days logged</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- DAILY LOGGING FORM -->
+        <section class="logging-section" aria-label="Daily Logging Form">
+            <div class="card form-card">
+                <h2>Daily Log</h2>
+                <form id="dailyForm">
+                    <div class="form-group">
+                        <label for="dateInput">Date <small class="text-muted">(2019 E.C. Q1)</small></label>
+                        <input type="date" id="dateInput" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quranInput">Qur'an (Pages Recited Today)</label>
+                        <div class="input-with-stepper">
+                            <input type="number" id="quranInput" min="0" placeholder="0">
+                            <div class="stepper-controls">
+                                <button type="button" class="btn-stepper" data-step="-5" aria-label="Subtract 5 pages">−5</button>
+                                <button type="button" class="btn-stepper" data-step="5" aria-label="Add 5 pages">+5</button>
+                                <button type="button" class="btn-stepper" data-step="10" aria-label="Add 10 pages">+10</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group zikr-group">
+                        <div class="zikr-header">
+                            <label>Zikr Counts</label>
+                            <button type="button" id="fillBaselineBtn" class="btn-small">Fill Baseline (55)</button>
+                        </div>
+                        <div class="zikr-grid">
+                            <div class="zikr-item">
+                                <label for="salawatInput">Salawat</label>
+                                <input type="number" id="salawatInput" min="0" placeholder="0">
+                            </div>
+                            <div class="zikr-item">
+                                <label for="subhanAllahInput">SubhanAllah</label>
+                                <input type="number" id="subhanAllahInput" min="0" placeholder="0">
+                            </div>
+                            <div class="zikr-item">
+                                <label for="istighfarInput">Istighfar</label>
+                                <input type="number" id="istighfarInput" min="0" placeholder="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="sawmInput">
+                            <span class="checkbox-custom"></span>
+                            Completed Sunnah Fast Today
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notesInput">Notes <small class="text-muted">(Optional context)</small></label>
+                        <input type="text" id="notesInput" placeholder="e.g., Busy day, good rhythm...">
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-primary">Save Daily Record</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- HISTORY LEDGER -->
+        <section class="history-section" aria-label="History Ledger">
+            <h2>History Ledger</h2>
+            <div id="historyContainer" class="history-list">
+                <!-- History items injected via JS -->
+            </div>
+        </section>
+
+        <!-- RESET CONTROL -->
+        <section class="reset-section">
+            <button id="resetAllBtn" class="btn-danger-outline">Delete All Records</button>
+        </section>
+    </main>
+
+    <!-- SOP SLIDE-OVER DRAWER -->
+    <div id="sopDrawer" class="drawer" aria-hidden="true">
+        <div class="drawer-backdrop" id="drawerBackdrop"></div>
+        <aside class="drawer-content" role="dialog" aria-modal="true" aria-labelledby="sopTitle">
+            <div class="drawer-header">
+                <h2 id="sopTitle">SOP Guide</h2>
+                <button id="closeSopBtn" class="btn-icon" aria-label="Close SOP Guide">×</button>
+            </div>
+            <div class="drawer-body">
+                <div class="sop-block emphasis-block">
+                    <h3>Guiding Principle</h3>
+                    <p>«“Make the destination measurable; make the route flexible.”»</p>
+                </div>
+
+                <div class="sop-block">
+                    <h3>Qur'an SOP</h3>
+                    <ul>
+                        <li><strong>Annual Destination:</strong> 6 Khatm</li>
+                        <li><strong>Q1 Reference:</strong> 45 Juz</li>
+                        <li><strong>Flexible Pace:</strong> ~10 pages/day</li>
+                    </ul>
+                    <p class="sop-note">The pace is a reference trajectory, not a rigid daily quota.</p>
+                </div>
+
+                <div class="sop-block">
+                    <h3>Zikr SOP</h3>
+                    <ul>
+                        <li><strong>Daily Baseline:</strong> 55 counts</li>
+                        <li><strong>Breakdown:</strong>
+                            <br>Salawat — 15
+                            <br>SubhanAllah — 10
+                            <br>Istighfar — 30
+                        </li>
+                    </ul>
+                    <p class="sop-note">This baseline is a reference point, not a punishment threshold.</p>
+                </div>
+
+                <div class="sop-block">
+                    <h3>Sawm SOP</h3>
+                    <ul>
+                        <li><strong>Annual Destination:</strong> 12 days</li>
+                        <li><strong>Scheduling:</strong> Flexible dates</li>
+                    </ul>
+                </div>
+
+                <div class="sop-block">
+                    <h3>Weekly Review</h3>
+                    <ol>
+                        <li>What did I actually complete?</li>
+                        <li>What changed?</li>
+                        <li>What disrupted the rhythm?</li>
+                        <li>Am I progressing?</li>
+                        <li>What needs adapting?</li>
+                    </ol>
+                </div>
+
+                <div class="sop-block">
+                    <h3>Monthly Review</h3>
+                    <ol>
+                        <li>Cumulative progress?</li>
+                        <li>Sustainable trajectory?</li>
+                        <li>Emerging patterns?</li>
+                        <li>Gap causes?</li>
+                        <li>Necessary adjustments?</li>
+                    </ol>
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>
